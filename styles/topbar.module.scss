@@ -1,0 +1,253 @@
+// ========================================
+// COLOR SCALE (SCSS değişkenleri)
+// ========================================
+
+$accent-red: #c41e3a;
+$accent-green: #2e8b57;
+$accent-blue: #005eb8;
+
+// Sidebar'dan açık topbar tonları
+$topbar-red: #e05070;     // sidebar #d63c5a'dan açık
+$topbar-green: #4aad7a;   // sidebar #369966'dan açık
+$topbar-blue: #4a9de0;    // sidebar #2d7dd2'den açık
+
+// ─── Topbar gövdesi ───────────────────────────────────────────────────────────
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 58px;
+  padding: 0 20px;
+  border-bottom: none;
+  flex-shrink: 0;
+  transition: var(--transition, all 0.25s ease);
+
+  &[data-accent="red"]   { background: $topbar-red; }
+  &[data-accent="green"] { background: $topbar-green; }
+  &[data-accent="blue"]  { background: $topbar-blue; }
+}
+
+:global([data-theme='dark']) .topbar,
+:global(.dark) .topbar {
+  background: var(--topbar-bg) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+// ─── Karşılama yazısı ─────────────────────────────────────────────────────────
+.greeting {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+:global([data-theme='dark']) .greeting,
+:global(.dark) .greeting {
+  color: var(--text-muted);
+}
+
+// ─── Sağ aksiyonlar ───────────────────────────────────────────────────────────
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+// ─── Renk seçici ─────────────────────────────────────────────────────────────
+.colorPicker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.colorDot {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+
+  &:hover { transform: scale(1.18); }
+
+  &.colorDotActive {
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.4), 0 0 0 4px white;
+  }
+}
+
+:global([data-theme='dark']) .colorDotActive,
+:global(.dark) .colorDotActive {
+  box-shadow: 0 0 0 2px var(--bg-secondary), 0 0 0 3.5px rgba(255, 255, 255, 0.5) !important;
+}
+
+// ─── Divider ─────────────────────────────────────────────────────────────────
+.divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+:global([data-theme='dark']) .divider,
+:global(.dark) .divider {
+  background: var(--border-color);
+}
+
+// ─── Icon buton ───────────────────────────────────────────────────────────────
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm, 8px);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.85);
+  transition: var(--transition, all 0.25s ease);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+  }
+
+  svg { width: 17px; height: 17px; }
+}
+
+:global([data-theme='dark']) .iconBtn,
+:global(.dark) .iconBtn {
+  color: var(--text-muted);
+
+  &:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+}
+
+// ─── Dil seçici ──────────────────────────────────────────────────────────────
+.langSwitch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--radius-sm, 8px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+:global([data-theme='dark']) .langSwitch,
+:global(.dark) .langSwitch {
+  background: var(--bg-tertiary);
+}
+
+.langBtn {
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.65);
+  transition: var(--transition, all 0.25s ease);
+}
+
+:global([data-theme='dark']) .langBtn,
+:global(.dark) .langBtn {
+  color: var(--text-muted);
+}
+
+.langBtnActive {
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  color: #1e293b;
+}
+
+:global([data-theme='dark']) .langBtnActive,
+:global(.dark) .langBtnActive {
+  background: var(--bg-secondary);
+  color: var(--text-primary) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+// ─── Profil ───────────────────────────────────────────────────────────────────
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px 5px 5px;
+  border-radius: var(--radius-sm, 8px);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition, all 0.25s ease);
+
+  &:hover { background: rgba(255, 255, 255, 0.12); }
+}
+
+:global([data-theme='dark']) .profile:hover,
+:global(.dark) .profile:hover {
+  background: var(--bg-tertiary);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm, 8px);
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 4px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+}
+
+:global([data-theme='dark']) .avatar,
+:global(.dark) .avatar {
+  background: rgba(255, 255, 255, 0.1);
+
+  img { filter: brightness(0) invert(1); }
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+}
+
+.profileName {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  line-height: 1;
+}
+
+:global([data-theme='dark']) .profileName,
+:global(.dark) .profileName {
+  color: var(--text-primary);
+}
+
+.profileRole {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1;
+}
+
+.profileChevron {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.5);
+
+  svg { width: 13px; height: 13px; }
+}
