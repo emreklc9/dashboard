@@ -270,3 +270,11 @@ body {
 
 // document.documentElement.setAttribute('data-theme', 'dark');
 // document.documentElement.setAttribute('data-theme', 'light');
+
+
+
+
+
+
+
+ApexCharts kullanarak veya Recharts kullanarak dashboardda önce rasgele data oluşturmanı ve tablo pie chart line chart bir(4 lü) istatistikcartı ufak bir bilgilendirme alanı olan bir yapı oluşturabilir miyiz?

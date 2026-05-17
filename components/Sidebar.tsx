@@ -38,6 +38,7 @@ const NAV_ITEMS = [
   {
     href: "/chat",
     label: { tr: "Sohbet", en: "Chat" },
+    badge: 5,
     icon: (
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -47,6 +48,7 @@ const NAV_ITEMS = [
   {
     href: "/mail",
     label: { tr: "Posta", en: "Mail" },
+    badge: 12,
     icon: (
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -54,11 +56,11 @@ const NAV_ITEMS = [
     ),
   },
   {
-    href: "/tags",
-    label: { tr: "Etiketler", en: "Tags" },
+    href: "/components",
+    label: { tr: "Bileşenler", en: "Components" },
     icon: (
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
       </svg>
     ),
     hasChevron: true,
@@ -119,6 +121,11 @@ export default function Sidebar() {
           >
             <span className={styles.iconWrap}>{item.icon}</span>
             <span className={styles.label}>{item.label[language]}</span>
+            {item.badge && !item.hasChevron && (
+              <span className={`${styles.badge} ${isActive(item.href) ? styles.badgeActive : ""}`}>
+                {item.badge > 99 ? "99+" : item.badge}
+              </span>
+            )}
             {item.hasChevron && (
               <span className={styles.chevron}><ChevronRight /></span>
             )}

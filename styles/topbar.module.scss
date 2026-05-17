@@ -30,8 +30,8 @@ $topbar-blue: #4a9de0;    // sidebar #2d7dd2'den açık
 :global([data-theme='dark']) .topbar,
 :global(.dark) .topbar {
   background: var(--topbar-bg) !important;
-  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
+  /* backdrop-filter yeni stacking context oluşturduğu için dropdown altta kalır, kaldırıldı */
 }
 
 // ─── Karşılama yazısı ─────────────────────────────────────────────────────────
@@ -248,6 +248,322 @@ $topbar-blue: #4a9de0;    // sidebar #2d7dd2'den açık
   display: flex;
   align-items: center;
   color: rgba(255, 255, 255, 0.5);
+  transition: transform 0.2s ease;
 
   svg { width: 13px; height: 13px; }
+}
+
+.profileChevronOpen {
+  transform: rotate(180deg);
+}
+
+// ─── Profil wrap (pozisyon referansı) ────────────────────────────────────────
+.profileWrap {
+  position: relative;
+}
+
+// ─── Dropdown ────────────────────────────────────────────────────────────────
+.dropdown {
+  position: fixed;
+  width: 260px;
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius-md, 12px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(15, 23, 42, 0.08);
+  z-index: 9999; /* SVG stacking context'ini geç */
+  overflow: hidden;
+  animation: dropIn 0.15s ease;
+}
+
+:global([data-theme='dark']) .dropdown,
+:global(.dark) .dropdown {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// Profil başlığı
+.dropdownProfile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.dropdownAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm, 8px);
+  background: var(--info-bg, #e5f1ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 5px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+:global([data-theme='dark']) .dropdownAvatar,
+:global(.dark) .dropdownAvatar {
+  background: #2d3f55;
+
+  img { filter: brightness(0) invert(1); }
+}
+
+.dropdownName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+  line-height: 1.2;
+}
+
+:global([data-theme='dark']) .dropdownName,
+:global(.dark) .dropdownName { color: #f1f5f9; }
+
+.dropdownEmail {
+  font-size: 11px;
+  color: var(--text-muted, #64748b);
+  margin-top: 2px;
+}
+
+:global([data-theme='dark']) .dropdownEmail,
+:global(.dark) .dropdownEmail { color: #64748b; }
+
+// Bölüm
+.dropdownSection {
+  padding: 10px 16px 12px;
+}
+
+.dropdownSectionLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+// Renk butonları
+.dropdownColors {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropdownColorBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm, 8px);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary, #475569);
+  transition: var(--transition, all 0.25s ease);
+
+  &:hover {
+    background: var(--bg-tertiary, #f1f5f9);
+    color: var(--text-primary, #0f172a);
+  }
+}
+
+.dropdownColorBtnActive {
+  background: var(--bg-tertiary, #f1f5f9);
+  color: var(--text-primary, #0f172a);
+  font-weight: 600;
+}
+
+:global([data-theme='dark']) .dropdownColorBtn,
+:global(.dark) .dropdownColorBtn {
+  color: #cbd5e1;
+
+  &:hover { background: #2d3a4e; color: #f1f5f9; }
+}
+
+:global([data-theme='dark']) .dropdownColorBtnActive,
+:global(.dark) .dropdownColorBtnActive {
+  background: #2d3a4e;
+  color: #f1f5f9;
+}
+
+.dropdownColorDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+// Satır (dark mode, dil)
+.dropdownRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition, all 0.25s ease);
+
+  &:hover { background: var(--bg-tertiary, #f1f5f9); }
+}
+
+:global([data-theme='dark']) .dropdownRow:hover,
+:global(.dark) .dropdownRow:hover {
+  background: #2d3a4e;
+}
+
+.dropdownRowIcon {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted, #64748b);
+  flex-shrink: 0;
+}
+
+:global([data-theme='dark']) .dropdownRowIcon,
+:global(.dark) .dropdownRowIcon { color: #64748b; }
+
+.dropdownRowLabel {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-secondary, #475569);
+  text-align: left;
+}
+
+:global([data-theme='dark']) .dropdownRowLabel,
+:global(.dark) .dropdownRowLabel {
+  color: #cbd5e1;
+}
+
+// Toggle switch
+.dropdownToggle {
+  width: 34px;
+  height: 18px;
+  border-radius: 9px;
+  background: #cbd5e1;
+  position: relative;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+:global([data-theme='dark']) .dropdownToggle,
+:global(.dark) .dropdownToggle { background: #334155; }
+
+.dropdownToggleOn {
+  background: #2e8b57 !important;
+}
+
+.dropdownToggleThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+
+  .dropdownToggleOn & {
+    transform: translateX(16px);
+  }
+}
+
+// Dil switch (dropdown içi)
+.dropdownLangSwitch {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 7px;
+  background: var(--bg-tertiary, #f1f5f9);
+}
+
+:global([data-theme='dark']) .dropdownLangSwitch,
+:global(.dark) .dropdownLangSwitch {
+  background: #0f172a;
+}
+
+.dropdownLangBtn {
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  transition: var(--transition, all 0.25s ease);
+}
+
+:global([data-theme='dark']) .dropdownLangBtn,
+:global(.dark) .dropdownLangBtn { color: #64748b; }
+
+.dropdownLangBtnActive {
+  background: white;
+  color: var(--text-primary, #0f172a);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+:global([data-theme='dark']) .dropdownLangBtnActive,
+:global(.dark) .dropdownLangBtnActive {
+  background: #2d3a4e;
+  color: #f1f5f9;
+}
+
+// Divider
+.dropdownDivider {
+  height: 1px;
+  background: var(--border-color, #e2e8f0);
+  margin: 0;
+}
+
+:global([data-theme='dark']) .dropdownDivider,
+:global(.dark) .dropdownDivider { background: #334155; }
+
+// Çıkış yap
+.dropdownSignOut {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #c41e3a;
+  transition: var(--transition, all 0.25s ease);
+
+  &:hover { background: #ffe5ea; }
+}
+
+:global([data-theme='dark']) .dropdownSignOut,
+:global(.dark) .dropdownSignOut {
+  color: #f87171;
+
+  &:hover { background: rgba(196, 30, 58, 0.15); }
+}
+
+:global([data-theme='dark']) .dropdownSignOut,
+:global(.dark) .dropdownSignOut {
+  color: #dd4b66;
+
+  &:hover { background: rgba(196, 30, 58, 0.1); }
 }

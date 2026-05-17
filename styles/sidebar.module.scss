@@ -194,6 +194,47 @@ $active-blue: rgba(0, 0, 0, 0.15);
   text-overflow: ellipsis;
 }
 
+// ─── Badge ────────────────────────────────────────────────────────────────────
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  flex-shrink: 0;
+}
+
+// Aktif item badge: sidebar rengiyle uyumlu
+.badgeActive {
+  &[data-accent="red"]   { background: $accent-red;   color: white; }
+  &[data-accent="green"] { background: $accent-green; color: white; }
+  &[data-accent="blue"]  { background: $accent-blue;  color: white; }
+}
+
+.navItem.active .badge {
+  background: rgba(0, 0, 0, 0.15);
+  color: inherit;
+}
+
+:global([data-theme='dark']) .badge,
+:global(.dark) .badge {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+}
+
+:global([data-theme='dark']) .navItem.active .badge,
+:global(.dark) .navItem.active .badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
 // ─── Chevron ─────────────────────────────────────────────────────────────────
 .chevron {
   display: flex;
