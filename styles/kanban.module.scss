@@ -58,6 +58,109 @@
   &:hover { background: #334155; }
 }
 
+.boardBtnActive {
+  border-color: var(--primary, #005eb8);
+  color: var(--primary, #005eb8);
+  background: color-mix(in srgb, var(--primary, #005eb8) 8%, transparent);
+}
+
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: -8px 0 16px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm, 8px);
+  background: var(--bg-tertiary, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+:global([data-theme='dark']) .filterBar,
+:global(.dark) .filterBar {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 10px;
+  border-radius: 20px;
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary, #475569);
+}
+
+:global([data-theme='dark']) .filterChip,
+:global(.dark) .filterChip {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+.filterChipRemove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: var(--bg-tertiary, #f1f5f9);
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+}
+
+:global([data-theme='dark']) .filterChipRemove,
+:global(.dark) .filterChipRemove {
+  background: #334155;
+
+  &:hover { background: #7f1d1d; color: #fca5a5; }
+}
+
+.filterClearAll {
+  margin-left: auto;
+  padding: 4px 10px;
+  border: none;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+
+  &:hover {
+    color: var(--text-primary, #0f172a);
+    background: var(--card-bg, #fff);
+  }
+}
+
+:global([data-theme='dark']) .filterClearAll,
+:global(.dark) .filterClearAll {
+  &:hover { color: #f1f5f9; background: #1e293b; }
+}
+
+.columnEmptyFiltered {
+  padding: 16px 12px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+  font-style: italic;
+}
+
 // ─── Sütunlar yatay kaydırma alanı ───────────────────────────────────────────
 
 .columns {

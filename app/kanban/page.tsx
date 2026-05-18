@@ -5,6 +5,15 @@ import { useApp } from "@/context/AppContext";
 import NewColumnDialog from "@/components/kanban/dialogs/NewColumnDialog";
 import ColumnMenuDialog from "@/components/kanban/dialogs/ColumnMenuDialog";
 import CardDetailDialog from "@/components/kanban/dialogs/CardDetailDialog";
+import FilterDialog from "@/components/kanban/dialogs/FilterDialog";
+import {
+  EMPTY_KANBAN_FILTERS,
+  buildFilterChips,
+  cardMatchesFilters,
+  hasActiveFilters,
+  removeFilterChip,
+  type KanbanFilters,
+} from "@/lib/kanban/filters";
 import type { Card, CardDetailContext, Column, NewColumnData } from "@/lib/kanban/types";
 import { KANBAN_MEMBERS, KANBAN_TAGS } from "@/lib/kanban/constants";
 import { seedAttachments, seedComments } from "@/lib/kanban/seed";
@@ -97,12 +106,34 @@ export default function KanbanPage() {
   const [showNewColumn, setShowNewColumn] = useState(false);
   const [menuColId, setMenuColId]     = useState<string | null>(null);
   const [cardDetail, setCardDetail]   = useState<CardDetailContext | null>(null);
+  const [showFilter, setShowFilter]   = useState(false);
+  const [filters, setFilters]         = useState<KanbanFilters>(EMPTY_KANBAN_FILTERS);
   const cardDragRef = useRef(false);
 
   const ACCENT_COLORS: Record<string, string> = { red: "#c41e3a", green: "#2e8b57", blue: "#005eb8" };
   const accentColor = ACCENT_COLORS[accent] ?? "#005eb8";
-  const totalCards  = columns.reduce((s, c) => s + c.cards.length, 0);
+  const filtersActive = hasActiveFilters(filters);
+  const filterChips = buildFilterChips(filters, columns, language);
+
+  const displayColumns =
+    filters.columnIds.length > 0
+      ? columns.filter((c) => filters.columnIds.includes(c.id))
+      : columns;
+
+  const countVisibleCards = (cols: Column[]) =>
+    cols.reduce(
+      (sum, col) =>
+        sum + col.cards.filter((c) => cardMatchesFilters(c, col.id, filters)).length,
+      0
+    );
+
+  const totalCards = countVisibleCards(columns);
+  const allCardsCount = columns.reduce((s, c) => s + c.cards.length, 0);
   const menuColumn  = columns.find((c) => c.id === menuColId) ?? null;
+
+  const removeChip = (chip: ReturnType<typeof buildFilterChips>[number]) => {
+    setFilters((prev) => removeFilterChip(prev, chip));
+  };
 
   // ─── Sütun sürükle ─────────────────────────────────────────────────────────
 
@@ -330,6 +361,16 @@ export default function KanbanPage() {
         language={language}
       />
 
+      <FilterDialog
+        open={showFilter}
+        columns={columns}
+        filters={filters}
+        onClose={() => setShowFilter(false)}
+        onApply={setFilters}
+        accentColor={accentColor}
+        language={language}
+      />
+
       {/* Başlık */}
       <div className={styles.boardHeader}>
         <div>
@@ -337,15 +378,44 @@ export default function KanbanPage() {
             {language === "tr" ? "Proje Panosu" : "Project Board"}
           </h1>
           <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>
-            {totalCards} {language === "tr" ? "kart" : "cards"}
+            {filtersActive
+              ? language === "tr"
+                ? `${totalCards} / ${allCardsCount} kart gösteriliyor`
+                : `Showing ${totalCards} of ${allCardsCount} cards`
+              : `${totalCards} ${language === "tr" ? "kart" : "cards"}`}
           </p>
         </div>
         <div className={styles.boardActions}>
-          <button className={styles.boardBtn}>
+          <button
+            type="button"
+            className={`${styles.boardBtn} ${filtersActive ? styles.boardBtnActive : ""}`}
+            style={filtersActive ? { borderColor: accentColor, color: accentColor } : undefined}
+            onClick={() => setShowFilter(true)}
+          >
             <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
             </svg>
             {language === "tr" ? "Filtrele" : "Filter"}
+            {filtersActive && (
+              <span
+                style={{
+                  marginLeft: 2,
+                  minWidth: 16,
+                  height: 16,
+                  padding: "0 4px",
+                  borderRadius: 8,
+                  background: accentColor,
+                  color: "white",
+                  fontSize: 10,
+                  fontWeight: 700,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {filterChips.length}
+              </span>
+            )}
           </button>
           <button
             className={styles.boardBtn}
@@ -360,9 +430,27 @@ export default function KanbanPage() {
         </div>
       </div>
 
+      {filtersActive && (
+        <div className={styles.filterBar}>
+          {filterChips.map((chip) => (
+            <span key={chip.id} className={styles.filterChip}>
+              {chip.label}
+              <button type="button" className={styles.filterChipRemove} onClick={() => removeChip(chip)} aria-label="remove">×</button>
+            </span>
+          ))}
+          <button type="button" className={styles.filterClearAll} onClick={() => setFilters(EMPTY_KANBAN_FILTERS)}>
+            {language === "tr" ? "Tümünü temizle" : "Clear all"}
+          </button>
+        </div>
+      )}
+
       {/* Sütunlar */}
       <div className={styles.columns}>
-        {columns.map((col, colIdx) => {
+        {displayColumns.map((col) => {
+          const colIdx = columns.findIndex((c) => c.id === col.id);
+          const visibleCards = col.cards.filter(
+            (c): c is Card => Boolean(c?.id) && cardMatchesFilters(c, col.id, filters)
+          );
           const isDropCol = dropTarget?.colId === col.id && !draggingCol;
           return (
             <Fragment key={col.id}>
@@ -398,14 +486,22 @@ export default function KanbanPage() {
                     <div className={styles.columnHeaderTitle}>
                       <span className={styles.columnTitle}>{col.title}</span>
                       <div className={styles.columnMeta}>
-                        <span className={styles.columnCount}>{col.cards.length}</span>
+                        <span className={styles.columnCount}>
+                          {filtersActive ? visibleCards.length : col.cards.length}
+                        </span>
                       </div>
                     </div>
                   </div>
 
                   {/* Kart listesi */}
                   <div className={styles.cardList}>
-                    {col.cards.filter((c): c is Card => Boolean(c?.id)).map((card, cardIdx) => {
+                    {visibleCards.length === 0 && filtersActive && (
+                      <p className={styles.columnEmptyFiltered}>
+                        {language === "tr" ? "Filtreye uygun kart yok" : "No cards match filters"}
+                      </p>
+                    )}
+                    {visibleCards.map((card) => {
+                      const cardIdx = col.cards.findIndex((c) => c.id === card.id);
                       const isDraggingThis = dragging?.cardId === card.id;
                       const showDropLine   = isDropCol && dropTarget?.index === cardIdx && dragging?.cardId !== card.id;
                       return (
