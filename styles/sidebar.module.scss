@@ -242,14 +242,81 @@ $active-blue: rgba(0, 0, 0, 0.15);
   align-items: center;
   color: rgba(255, 255, 255, 0.45);
   flex-shrink: 0;
+  transition: transform 0.2s ease;
 
   svg { width: 13px; height: 13px; }
+}
+
+.chevronOpen {
+  transform: rotate(90deg);
 }
 
 :global([data-theme='dark']) .chevron,
 :global(.dark) .chevron {
   color: var(--text-muted);
   opacity: 0.6;
+}
+
+// ─── Submenu ──────────────────────────────────────────────────────────────────
+.subMenu {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: subMenuIn 0.18s ease;
+}
+
+@keyframes subMenuIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.subItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px 7px 44px; /* soldan girinti — ikon hizası */
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  margin: 1px 8px;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+  }
+}
+
+:global([data-theme='dark']) .subItem,
+:global(.dark) .subItem {
+  color: var(--text-muted);
+
+  &:hover { background: var(--bg-tertiary); color: var(--text-secondary); }
+}
+
+.subItemActive {
+  background: rgba(255, 255, 255, 0.18);
+  color: white;
+  font-weight: 600;
+}
+
+:global([data-theme='dark']) .subItemActive,
+:global(.dark) .subItemActive {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.subItemDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  opacity: 0.6;
+
+  .subItemActive & { opacity: 1; }
 }
 
 // ─── Divider ─────────────────────────────────────────────────────────────────

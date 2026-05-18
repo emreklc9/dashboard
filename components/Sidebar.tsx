@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import styles from "@/styles/sidebar.module.scss";
 
@@ -34,6 +35,10 @@ const NAV_ITEMS = [
       </svg>
     ),
     hasChevron: true,
+    children: [
+      { href: "/kanban/kanban1", label: { tr: "Kanban 1", en: "Kanban 1" } },
+      { href: "/kanban/kanban2", label: { tr: "Kanban 2", en: "Kanban 2" } },
+    ],
   },
   {
     href: "/chat",
@@ -89,9 +94,15 @@ const ChevronRight = () => (
 export default function Sidebar() {
   const pathname = usePathname();
   const { accent, language } = useApp();
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({
+    "/kanban": pathname.startsWith("/kanban"),
+  });
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
+
+  const toggleMenu = (href: string) =>
+    setOpenMenus((prev) => ({ ...prev, [href]: !prev[href] }));
 
   return (
     <aside className={styles.sidebar} data-accent={accent}>
@@ -113,23 +124,56 @@ export default function Sidebar() {
       </span>
       <nav className={styles.nav}>
         {NAV_ITEMS.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`${styles.navItem} ${isActive(item.href) ? styles.active : ""}`}
-            data-accent={accent}
-          >
-            <span className={styles.iconWrap}>{item.icon}</span>
-            <span className={styles.label}>{item.label[language]}</span>
-            {item.badge && !item.hasChevron && (
-              <span className={`${styles.badge} ${isActive(item.href) ? styles.badgeActive : ""}`}>
-                {item.badge > 99 ? "99+" : item.badge}
-              </span>
+          <div key={item.href}>
+            {item.children ? (
+              /* Alt menüsü olan öğe — button olarak render et */
+              <>
+                <button
+                  className={`${styles.navItem} ${isActive(item.href) ? styles.active : ""}`}
+                  data-accent={accent}
+                  onClick={() => toggleMenu(item.href)}
+                >
+                  <span className={styles.iconWrap}>{item.icon}</span>
+                  <span className={styles.label}>{item.label[language]}</span>
+                  <span className={`${styles.chevron} ${openMenus[item.href] ? styles.chevronOpen : ""}`}>
+                    <ChevronRight />
+                  </span>
+                </button>
+                {openMenus[item.href] && (
+                  <div className={styles.subMenu}>
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className={`${styles.subItem} ${isActive(child.href) ? styles.subItemActive : ""}`}
+                      >
+                        <span className={styles.subItemDot} />
+                        {child.label[language]}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              /* Normal link */
+              <Link
+                href={item.href}
+                className={`${styles.navItem} ${isActive(item.href) ? styles.active : ""}`}
+                data-accent={accent}
+              >
+                <span className={styles.iconWrap}>{item.icon}</span>
+                <span className={styles.label}>{item.label[language]}</span>
+                {item.badge && (
+                  <span className={`${styles.badge} ${isActive(item.href) ? styles.badgeActive : ""}`}>
+                    {item.badge > 99 ? "99+" : item.badge}
+                  </span>
+                )}
+                {item.hasChevron && (
+                  <span className={styles.chevron}><ChevronRight /></span>
+                )}
+              </Link>
             )}
-            {item.hasChevron && (
-              <span className={styles.chevron}><ChevronRight /></span>
-            )}
-          </Link>
+          </div>
         ))}
       </nav>
 
