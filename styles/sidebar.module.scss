@@ -134,6 +134,12 @@ $active-blue: rgba(0, 0, 0, 0.15);
   text-decoration: none;
   transition: var(--transition, all 0.25s ease);
   cursor: pointer;
+  /* button sıfırlama */
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-family: inherit;
 }
 
 :global([data-theme='dark']) .navItem,
@@ -274,7 +280,7 @@ $active-blue: rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 14px 7px 44px; /* soldan girinti — ikon hizası */
+  padding: 7px 14px 7px 44px;
   font-size: 12px;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.7);
@@ -283,7 +289,7 @@ $active-blue: rgba(0, 0, 0, 0.15);
   text-decoration: none;
   transition: background 0.15s ease, color 0.15s ease;
 
-  &:hover {
+  &:not(.subItemActive):hover {
     background: rgba(255, 255, 255, 0.12);
     color: white;
   }
@@ -293,20 +299,34 @@ $active-blue: rgba(0, 0, 0, 0.15);
 :global(.dark) .subItem {
   color: var(--text-muted);
 
-  &:hover { background: var(--bg-tertiary); color: var(--text-secondary); }
+  &:not(.subItemActive):hover { background: var(--bg-tertiary); color: var(--text-secondary); }
 }
 
+// Light: üst navItem.active ile aynı — beyaz arka plan, accent renkli yazı
 .subItemActive {
-  background: rgba(255, 255, 255, 0.18);
-  color: white;
+  background: white;
   font-weight: 600;
 }
 
+.sidebar[data-accent="red"]   .subItemActive { color: $soft-red; }
+.sidebar[data-accent="green"] .subItemActive { color: $soft-green; }
+.sidebar[data-accent="blue"]  .subItemActive { color: $soft-blue; }
+
+// Dark: accent arka plan, beyaz yazı
 :global([data-theme='dark']) .subItemActive,
 :global(.dark) .subItemActive {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
 }
+
+:global([data-theme='dark']) .sidebar[data-accent="red"]   .subItemActive,
+:global(.dark) .sidebar[data-accent="red"]   .subItemActive { background: $accent-red;   color: white; }
+
+:global([data-theme='dark']) .sidebar[data-accent="green"] .subItemActive,
+:global(.dark) .sidebar[data-accent="green"] .subItemActive { background: $accent-green; color: white; }
+
+:global([data-theme='dark']) .sidebar[data-accent="blue"]  .subItemActive,
+:global(.dark) .sidebar[data-accent="blue"]  .subItemActive { background: $accent-blue;  color: white; }
 
 .subItemDot {
   width: 6px;

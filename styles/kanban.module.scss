@@ -1,0 +1,454 @@
+// ─── Kanban Board ─────────────────────────────────────────────────────────────
+
+.boardWrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0;
+}
+
+.boardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.boardTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+}
+
+:global([data-theme='dark']) .boardTitle,
+:global(.dark) .boardTitle { color: #f1f5f9; }
+
+.boardActions {
+  display: flex;
+  gap: 8px;
+}
+
+.boardBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid var(--border-color, #e2e8f0);
+  background: var(--card-bg, #fff);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, #475569);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    background: var(--bg-tertiary, #f1f5f9);
+    border-color: var(--text-muted, #94a3b8);
+  }
+}
+
+:global([data-theme='dark']) .boardBtn,
+:global(.dark) .boardBtn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+
+  &:hover { background: #334155; }
+}
+
+// ─── Sütunlar yatay kaydırma alanı ───────────────────────────────────────────
+
+.columns {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  align-items: flex-start;
+
+  &::-webkit-scrollbar { height: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: var(--border-color, #e2e8f0); border-radius: 4px; }
+}
+
+// ─── Sütun ────────────────────────────────────────────────────────────────────
+
+.column {
+  flex-shrink: 0;
+  width: 272px;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  background: var(--bg-tertiary, #f1f5f9);
+  border-radius: var(--radius-md, 12px);
+  overflow: hidden;
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+:global([data-theme='dark']) .column,
+:global(.dark) .column {
+  background: #111827;
+  border-color: #1e293b;
+}
+
+.columnTop {
+  height: 4px;
+  flex-shrink: 0;
+  border-radius: 12px 12px 0 0;
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 8px;
+  flex-shrink: 0;
+}
+
+.columnTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+}
+
+:global([data-theme='dark']) .columnTitle,
+:global(.dark) .columnTitle { color: #f1f5f9; }
+
+.columnMeta {
+  display: flex;
+  align-items: center;
+  gap: 0px;
+}
+
+.columnCount {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted, #94a3b8);
+  background: transparent;
+  border-radius: 10px;
+  padding: 1px 5px;
+  min-width: 26px;
+  text-align: center;
+}
+
+:global([data-theme='dark']) .columnCount,
+:global(.dark) .columnCount {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.columnViewBtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+
+  &:hover { background: var(--border-color, #e2e8f0); }
+}
+
+:global([data-theme='dark']) .columnViewBtn:hover,
+:global(.dark) .columnViewBtn:hover { background: #334155; }
+
+// Kart listesi
+.cardList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 10px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: var(--border-color, #e2e8f0); border-radius: 4px; }
+}
+
+// Alt kısım "+ Add card"
+.columnFooter {
+  padding: 8px 10px 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.addCardBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted, #94a3b8);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px 6px;
+  border-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease;
+
+  &:hover {
+    color: var(--text-primary, #0f172a);
+    background: var(--border-color, #e2e8f0);
+  }
+}
+
+:global([data-theme='dark']) .addCardBtn,
+:global(.dark) .addCardBtn {
+  &:hover { color: #e2e8f0; background: #1e293b; }
+}
+
+.addCardIcon {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--border-color, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+}
+
+:global([data-theme='dark']) .addCardIcon,
+:global(.dark) .addCardIcon { background: #334155; }
+
+.footerIconBtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+
+  &:hover { background: var(--border-color, #e2e8f0); }
+}
+
+:global([data-theme='dark']) .footerIconBtn:hover,
+:global(.dark) .footerIconBtn:hover { background: #1e293b; }
+
+// ─── Kart ─────────────────────────────────────────────────────────────────────
+
+.card {
+  background: var(--card-bg, #fff);
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid var(--border-color, #e2e8f0);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+  cursor: grab;
+  transition: box-shadow 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+  user-select: none;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+    transform: translateY(-1px);
+  }
+
+  &:active { cursor: grabbing; }
+}
+
+.cardDragging {
+  opacity: 0.35;
+  transform: scale(0.98);
+  box-shadow: none !important;
+}
+
+// Sütun üzerine sürüklenirken
+.columnDropOver {
+  background: var(--info-bg, #e5f1ff);
+}
+
+:global([data-theme='dark']) .columnDropOver,
+:global(.dark) .columnDropOver { background: #1e3a5f; }
+
+// Bırakma pozisyon göstergesi
+.dropIndicator {
+  height: 3px;
+  border-radius: 2px;
+  border: 2px dashed;
+  margin: 2px 0;
+  opacity: 0.7;
+  animation: pulse 0.6s ease infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 0.5; }
+  to   { opacity: 1; }
+}
+
+:global([data-theme='dark']) .card,
+:global(.dark) .card {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+
+  &:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.35); }
+}
+
+// Kart resmi
+.cardImage {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+  display: block;
+}
+
+// Kart içeriği
+.cardBody {
+  padding: 10px 12px 12px;
+}
+
+// Etiketler
+.cardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 7px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+// Başlık
+.cardTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+:global([data-theme='dark']) .cardTitle,
+:global(.dark) .cardTitle { color: #f1f5f9; }
+
+// Alt kısım: avatarlar + meta
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardAvatars {
+  display: flex;
+  align-items: center;
+}
+
+.cardAvatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: white;
+  border: 2px solid var(--card-bg, #fff);
+  margin-right: -6px;
+  flex-shrink: 0;
+}
+
+:global([data-theme='dark']) .cardAvatar,
+:global(.dark) .cardAvatar { border-color: #1e293b; }
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding-left: 10px;
+}
+
+.cardMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: var(--text-muted, #94a3b8);
+}
+
+// Yeni kart ekleme input alanı
+.addCardInput {
+  background: var(--card-bg, #fff);
+  border-radius: var(--radius-sm, 8px);
+  border: 2px solid var(--primary, #005eb8);
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--text-primary, #0f172a);
+  width: 100%;
+  outline: none;
+  font-family: inherit;
+  resize: none;
+  min-height: 60px;
+
+  &::placeholder { color: var(--text-muted, #94a3b8); }
+}
+
+:global([data-theme='dark']) .addCardInput,
+:global(.dark) .addCardInput {
+  background: #1e293b;
+  border-color: #3b82f6;
+  color: #f1f5f9;
+}
+
+.addCardActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.addCardConfirm {
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+
+  &:hover { filter: brightness(1.1); }
+}
+
+.addCardCancel {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover { background: var(--bg-tertiary, #f1f5f9); }
+}
+
+:global([data-theme='dark']) .addCardCancel,
+:global(.dark) .addCardCancel {
+  border-color: #334155;
+
+  &:hover { background: #1e293b; }
+}
