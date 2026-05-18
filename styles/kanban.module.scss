@@ -62,7 +62,7 @@
 
 .columns {
   display: flex;
-  gap: 16px;
+  gap: 0;
   flex: 1;
   overflow-x: auto;
   overflow-y: hidden;
@@ -72,6 +72,28 @@
   &::-webkit-scrollbar { height: 6px; }
   &::-webkit-scrollbar-track { background: transparent; }
   &::-webkit-scrollbar-thumb { background: var(--border-color, #e2e8f0); border-radius: 4px; }
+}
+
+.columnWrap {
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+  padding: 0 8px;
+}
+
+.columnDropIndicatorCol {
+  width: 4px;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 4px;
+  margin: 8px 0;
+  min-height: 120px;
+  animation: pulse 0.6s ease infinite alternate;
+}
+
+.columnDraggingCol {
+  opacity: 0.45;
+  transform: scale(0.98);
 }
 
 // ─── Sütun ────────────────────────────────────────────────────────────────────
@@ -106,6 +128,31 @@
   justify-content: space-between;
   padding: 12px 14px 8px;
   flex-shrink: 0;
+  gap: 6px;
+  cursor: grab;
+  user-select: none;
+
+  &:active { cursor: grabbing; }
+}
+
+.dragHandle {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted, #94a3b8);
+  flex-shrink: 0;
+  opacity: 0.5;
+  padding: 2px;
+
+  svg { width: 14px; height: 14px; }
+}
+
+.columnHeaderTitle {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .columnTitle {
@@ -259,6 +306,11 @@
   }
 
   &:active { cursor: grabbing; }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary, #005eb8);
+    outline-offset: 2px;
+  }
 }
 
 .cardDragging {
@@ -302,7 +354,7 @@
 // Kart resmi
 .cardImage {
   width: 100%;
-  aspect-ratio: 16 / 7;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   display: block;
 }

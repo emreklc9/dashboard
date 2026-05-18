@@ -34,11 +34,6 @@ const NAV_ITEMS = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
       </svg>
     ),
-    hasChevron: true,
-    children: [
-      { href: "/kanban/kanban1", label: { tr: "Kanban 1", en: "Kanban 1" } },
-      { href: "/kanban/kanban2", label: { tr: "Kanban 2", en: "Kanban 2" } },
-    ],
   },
   {
     href: "/chat",
@@ -94,9 +89,7 @@ const ChevronRight = () => (
 export default function Sidebar() {
   const pathname = usePathname();
   const { accent, language } = useApp();
-  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({
-    "/kanban": pathname.startsWith("/kanban"),
-  });
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
