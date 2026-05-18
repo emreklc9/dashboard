@@ -1,0 +1,752 @@
+// ─── Mail ekranı ─────────────────────────────────────────────────────────────
+
+.mailWrap {
+  display: flex;
+  height: 100%;
+  border-radius: var(--radius-lg, 18px);
+  overflow: hidden;
+  border: 1px solid var(--border-color, #e2e8f0);
+  box-shadow: var(--shadow-md, 0 4px 6px rgba(15, 23, 42, 0.08));
+  background: var(--card-bg, #fff);
+}
+
+// ─── Sol dar panel (klasörler) ────────────────────────────────────────────────
+
+.folderPanel {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color, #e2e8f0);
+  background: var(--bg-secondary, #fff);
+  padding: 16px 10px;
+  gap: 2px;
+}
+
+:global([data-theme='dark']) .folderPanel,
+:global(.dark) .folderPanel {
+  background: #111827;
+  border-color: #1e293b;
+}
+
+.composeBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm, 8px);
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: filter 0.15s ease;
+
+  &:hover { filter: brightness(1.1); }
+}
+
+.folderItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm, 8px);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary, #475569);
+  transition: background 0.15s ease, color 0.15s ease;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+
+  &:hover {
+    background: var(--bg-tertiary, #f1f5f9);
+    color: var(--text-primary, #0f172a);
+  }
+}
+
+:global([data-theme='dark']) .folderItem,
+:global(.dark) .folderItem {
+  color: #94a3b8;
+
+  &:hover { background: #1e293b; color: #e2e8f0; }
+}
+
+.folderItemActive {
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+  background: var(--info-bg, #e5f1ff);
+
+  &:hover { background: var(--info-bg, #e5f1ff); }
+}
+
+:global([data-theme='dark']) .folderItemActive,
+:global(.dark) .folderItemActive {
+  background: #1e3a5f;
+  color: #93c5fd;
+
+  &:hover { background: #1e3a5f; }
+}
+
+.folderIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.folderLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.folderBadge {
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.folderDivider {
+  height: 1px;
+  background: var(--border-color, #e2e8f0);
+  margin: 8px 0;
+}
+
+:global([data-theme='dark']) .folderDivider,
+:global(.dark) .folderDivider { background: #1e293b; }
+
+// ─── Orta panel (mail listesi) ────────────────────────────────────────────────
+
+.mailListPanel {
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color, #e2e8f0);
+  background: var(--bg-primary, #f8fafc);
+}
+
+:global([data-theme='dark']) .mailListPanel,
+:global(.dark) .mailListPanel {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+.mailListHeader {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+:global([data-theme='dark']) .mailListHeader,
+:global(.dark) .mailListHeader { border-color: #1e293b; }
+
+.mailListTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+}
+
+:global([data-theme='dark']) .mailListTitle,
+:global(.dark) .mailListTitle { color: #f1f5f9; }
+
+.mailListCount {
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+  background: var(--bg-tertiary, #f1f5f9);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+:global([data-theme='dark']) .mailListCount,
+:global(.dark) .mailListCount { background: #1e293b; }
+
+.mailList {
+  flex: 1;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: var(--border-color, #e2e8f0); border-radius: 4px; }
+}
+
+.mailItem {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  position: relative;
+
+  &:hover { background: var(--card-bg, #fff); }
+}
+
+:global([data-theme='dark']) .mailItem,
+:global(.dark) .mailItem {
+  border-color: #1e293b;
+
+  &:hover { background: #111827; }
+}
+
+.mailItemActive {
+  background: var(--card-bg, #fff);
+  border-left: 3px solid var(--primary, #005eb8);
+}
+
+:global([data-theme='dark']) .mailItemActive,
+:global(.dark) .mailItemActive {
+  background: #111827;
+  border-left-color: #3b82f6;
+}
+
+.mailUnreadDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary, #005eb8);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+:global([data-theme='dark']) .mailUnreadDot,
+:global(.dark) .mailUnreadDot { background: #3b82f6; }
+
+.mailItemBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.mailItemTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 3px;
+}
+
+.mailSender {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+}
+
+:global([data-theme='dark']) .mailSender,
+:global(.dark) .mailSender { color: #f1f5f9; }
+
+.mailSenderRead {
+  font-weight: 400;
+  color: var(--text-secondary, #475569);
+}
+
+:global([data-theme='dark']) .mailSenderRead,
+:global(.dark) .mailSenderRead { color: #94a3b8; }
+
+.mailTime {
+  font-size: 10px;
+  color: var(--text-muted, #94a3b8);
+  flex-shrink: 0;
+}
+
+.mailSubject {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary, #475569);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+:global([data-theme='dark']) .mailSubject,
+:global(.dark) .mailSubject { color: #cbd5e1; }
+
+.mailSubjectRead {
+  font-weight: 400;
+  color: var(--text-muted, #94a3b8);
+}
+
+.mailPreview {
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mailTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+// ─── Sağ panel (mail detay) ───────────────────────────────────────────────────
+
+.detailPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--card-bg, #fff);
+}
+
+:global([data-theme='dark']) .detailPanel,
+:global(.dark) .detailPanel { background: #111827; }
+
+.emptyDetail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text-muted, #94a3b8);
+}
+
+.emptyDetailIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--bg-tertiary, #f1f5f9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:global([data-theme='dark']) .emptyDetailIcon,
+:global(.dark) .emptyDetailIcon { background: #1e293b; }
+
+.detailHeader {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  flex-shrink: 0;
+}
+
+:global([data-theme='dark']) .detailHeader,
+:global(.dark) .detailHeader { border-color: #1e293b; }
+
+.detailSubject {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+:global([data-theme='dark']) .detailSubject,
+:global(.dark) .detailSubject { color: #f1f5f9; }
+
+.detailMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detailSenderRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detailAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.detailSenderName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+}
+
+:global([data-theme='dark']) .detailSenderName,
+:global(.dark) .detailSenderName { color: #f1f5f9; }
+
+.detailSenderEmail {
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+  margin-top: 1px;
+}
+
+.detailMetaRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detailDate {
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+}
+
+.iconBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm, 8px);
+  border: none;
+  background: var(--bg-tertiary, #f1f5f9);
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover { background: var(--border-color, #e2e8f0); color: var(--text-primary, #0f172a); }
+}
+
+:global([data-theme='dark']) .iconBtn,
+:global(.dark) .iconBtn {
+  background: #1e293b;
+  color: #64748b;
+
+  &:hover { background: #334155; color: #e2e8f0; }
+}
+
+.detailBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-secondary, #475569);
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: var(--border-color, #e2e8f0); border-radius: 4px; }
+
+  p { margin-bottom: 14px; }
+}
+
+:global([data-theme='dark']) .detailBody,
+:global(.dark) .detailBody { color: #cbd5e1; }
+
+.detailAttachments {
+  padding: 12px 24px 14px;
+  border-top: 1px solid var(--border-color, #e2e8f0);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+:global([data-theme='dark']) .detailAttachments,
+:global(.dark) .detailAttachments { border-color: #1e293b; }
+
+.attachmentLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted, #94a3b8);
+  margin-right: 4px;
+}
+
+.attachmentChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm, 8px);
+  background: var(--bg-tertiary, #f1f5f9);
+  border: 1px solid var(--border-color, #e2e8f0);
+  font-size: 11px;
+  color: var(--text-secondary, #475569);
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover { background: var(--border-color, #e2e8f0); }
+}
+
+:global([data-theme='dark']) .attachmentChip,
+:global(.dark) .attachmentChip {
+  background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+
+  &:hover { background: #334155; }
+}
+
+// ─── Compose / Reply alanı ────────────────────────────────────────────────────
+
+.replyCompose {
+  border-top: 1px solid var(--border-color, #e2e8f0);
+  background: var(--card-bg, #fff);
+  flex-shrink: 0;
+  position: relative;
+}
+
+:global([data-theme='dark']) .replyCompose,
+:global(.dark) .replyCompose {
+  background: #111827;
+  border-color: #1e293b;
+}
+
+.replyComposeHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 6px;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  flex-wrap: wrap;
+}
+
+:global([data-theme='dark']) .replyComposeHeader,
+:global(.dark) .replyComposeHeader { border-color: #1e293b; }
+
+.replyToLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted, #94a3b8);
+  white-space: nowrap;
+}
+
+// Etiketlenen kişi chipi
+.mentionChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px 2px 4px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  line-height: 1;
+}
+
+.mentionChipRemove {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  opacity: 0.75;
+  margin-left: 2px;
+
+  &:hover { opacity: 1; }
+}
+
+.mentionChipAvatar {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// @mention dropdown
+.mentionDropdown {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 16px;
+  width: 220px;
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius-md, 12px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+  z-index: 50;
+  animation: dropIn 0.1s ease;
+}
+
+:global([data-theme='dark']) .mentionDropdown,
+:global(.dark) .mentionDropdown {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.mentionDropdownLabel {
+  padding: 8px 12px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.mentionOption {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+
+  &:hover { background: var(--bg-tertiary, #f1f5f9); }
+}
+
+:global([data-theme='dark']) .mentionOption:hover,
+:global(.dark) .mentionOption:hover { background: #334155; }
+
+.mentionOptionAvatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.mentionOptionName {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+}
+
+:global([data-theme='dark']) .mentionOptionName,
+:global(.dark) .mentionOptionName { color: #f1f5f9; }
+
+.mentionOptionEmail {
+  font-size: 10px;
+  color: var(--text-muted, #94a3b8);
+}
+
+// Textarea
+.replyTextarea {
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-primary, #0f172a);
+  outline: none;
+  resize: none;
+  min-height: 68px;
+  max-height: 140px;
+  line-height: 1.6;
+  font-family: inherit;
+
+  &::placeholder { color: var(--text-muted, #94a3b8); }
+}
+
+:global([data-theme='dark']) .replyTextarea,
+:global(.dark) .replyTextarea { color: #e2e8f0; }
+
+// Ek dosyalar listesi
+.attachedFilesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 16px 8px;
+}
+
+.attachedFileChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm, 8px);
+  background: var(--bg-tertiary, #f1f5f9);
+  border: 1px solid var(--border-color, #e2e8f0);
+  font-size: 11px;
+  color: var(--text-secondary, #475569);
+}
+
+:global([data-theme='dark']) .attachedFileChip,
+:global(.dark) .attachedFileChip {
+  background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+.attachedFileRemove {
+  cursor: pointer;
+  display: flex;
+  color: var(--text-muted, #94a3b8);
+  margin-left: 2px;
+
+  &:hover { color: #ef4444; }
+}
+
+// Alt araç çubuğu
+.replyToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 12px;
+  gap: 6px;
+}
+
+.replyToolbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.toolbarBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm, 8px);
+  border: none;
+  background: transparent;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: var(--bg-tertiary, #f1f5f9);
+    color: var(--text-primary, #0f172a);
+  }
+}
+
+:global([data-theme='dark']) .toolbarBtn,
+:global(.dark) .toolbarBtn {
+  color: #475569;
+
+  &:hover { background: #1e293b; color: #e2e8f0; }
+}
+
+.replyBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.1s ease;
+  box-shadow: 0 2px 8px rgba(0, 94, 184, 0.3);
+
+  &:hover { filter: brightness(1.1); transform: scale(1.02); }
+  &:active { transform: scale(0.98); }
+}
