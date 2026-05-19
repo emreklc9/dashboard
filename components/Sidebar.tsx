@@ -2,11 +2,37 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useApp } from "@/context/AppContext";
 import styles from "@/styles/sidebar.module.scss";
 
-const NAV_ITEMS = [
+type NavLabel = { tr: string; en: string };
+
+type NavChild = {
+  href: string;
+  label: NavLabel;
+};
+
+type NavItem = {
+  href: string;
+  label: NavLabel;
+  icon: ReactNode;
+  badge?: number;
+  hasChevron?: boolean;
+  children?: NavChild[];
+};
+
+type SettingsItem = {
+  href: string;
+  label: NavLabel;
+  icon: ReactNode;
+};
+
+function hasChildren(item: NavItem): item is NavItem & { children: NavChild[] } {
+  return Array.isArray(item.children) && item.children.length > 0;
+}
+
+const NAV_ITEMS: NavItem[] = [
   {
     href: "/dashboard",
     label: { tr: "Dashboard", en: "Dashboard" },
@@ -66,7 +92,7 @@ const NAV_ITEMS = [
   },
 ];
 
-const SETTINGS_ITEMS = [
+const SETTINGS_ITEMS: SettingsItem[] = [
   {
     href: "/settings",
     label: { tr: "Ayarlar", en: "Settings" },
@@ -117,7 +143,7 @@ export default function Sidebar() {
       <nav className={styles.nav}>
         {NAV_ITEMS.map((item) => (
           <div key={item.href}>
-            {item.children ? (
+            {hasChildren(item) ? (
               /* Alt menüsü olan öğe — button olarak render et */
               <>
                 <button

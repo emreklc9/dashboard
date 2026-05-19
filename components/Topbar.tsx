@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useApp, AccentColor, Language } from "@/context/AppContext";
+import { useAuth } from "@/context/AuthContext";
 import styles from "@/styles/topbar.module.scss";
 
 const ACCENT_OPTIONS: { color: AccentColor; hex: string; label: { tr: string; en: string } }[] = [
@@ -31,8 +32,18 @@ const SignOutIcon = () => (
   </svg>
 );
 
+function formatExpiry(iso: string | null, language: Language): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return d.toLocaleString(language === "tr" ? "tr-TR" : "en-US", {
+    dateStyle: "short",
+    timeStyle: "short",
+  });
+}
+
 export default function Topbar() {
   const { accent, setAccent, darkMode, toggleDarkMode, language, setLanguage } = useApp();
+  const { user, expiresAt, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [dropdownPos, setDropdownPos] = useState<{ top: number; right: number }>({ top: 0, right: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -67,7 +78,7 @@ export default function Topbar() {
   return (
     <header className={styles.topbar} data-accent={accent}>
       <p className={styles.greeting}>
-        {language === "tr" ? "Hoş geldiniz 👋" : "Welcome 👋"}
+        {/* {language === "tr" ? "Hoş geldiniz 👋" : "Welcome 👋"} */}
       </p>
 
       <div className={styles.actions}>
@@ -83,8 +94,8 @@ export default function Topbar() {
               <img src="/image/cordelio-harf.png" alt="Avatar" />
             </div>
             <div className={styles.profileInfo}>
-              <span className={styles.profileName}>Cordelio</span>
-              <span className={styles.profileRole}>Admin</span>
+              <span className={styles.profileName}>{user?.name ?? "Cordelio"}</span>
+              <span className={styles.profileRole}>{user?.role ?? "Admin"}</span>
             </div>
             <span className={`${styles.profileChevron} ${open ? styles.profileChevronOpen : ""}`}>
               <ChevronDown />
@@ -104,8 +115,8 @@ export default function Topbar() {
                   <img src="/image/cordelio-harf.png" alt="Avatar" />
                 </div>
                 <div>
-                  <p className={styles.dropdownName}>Cordelio</p>
-                  <p className={styles.dropdownEmail}>admin@cordelio.dev</p>
+                  <p className={styles.dropdownName}>{user?.name ?? "Cordelio"}</p>
+                  <p className={styles.dropdownEmail}>{user?.email ?? "—"}</p>
                 </div>
               </div>
 
@@ -178,7 +189,7 @@ export default function Topbar() {
               <div className={styles.dropdownDivider} />
 
               {/* ─── Çıkış ─── */}
-              <button className={styles.dropdownSignOut}>
+              <button type="button" className={styles.dropdownSignOut} onClick={() => logout()}>
                 <SignOutIcon />
                 {language === "tr" ? "Çıkış Yap" : "Sign Out"}
               </button>
