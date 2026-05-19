@@ -1,9 +1,14 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 import { useApp, AccentColor, Language } from "@/context/AppContext";
 import { useAuth } from "@/context/AuthContext";
+import { useProfile } from "@/context/ProfileContext";
+import { JOB_ROLE_OPTIONS } from "@/lib/profile/constants";
 import styles from "@/styles/topbar.module.scss";
+
+const DEFAULT_AVATAR = "/image/cordelio-harf.png";
 
 const ACCENT_OPTIONS: { color: AccentColor; hex: string; label: { tr: string; en: string } }[] = [
   { color: "red",   hex: "#c41e3a", label: { tr: "Kırmızı", en: "Red"   } },
@@ -32,18 +37,16 @@ const SignOutIcon = () => (
   </svg>
 );
 
-function formatExpiry(iso: string | null, language: Language): string {
-  if (!iso) return "";
-  const d = new Date(iso);
-  return d.toLocaleString(language === "tr" ? "tr-TR" : "en-US", {
-    dateStyle: "short",
-    timeStyle: "short",
-  });
-}
-
 export default function Topbar() {
   const { accent, setAccent, darkMode, toggleDarkMode, language, setLanguage } = useApp();
-  const { user, expiresAt, logout } = useAuth();
+  const { user, logout } = useAuth();
+  const { profile } = useProfile();
+  const displayName = profile?.name ?? user?.name ?? "Cordelio";
+  const jobLabel = profile?.jobRole
+    ? JOB_ROLE_OPTIONS.find((o) => o.value === profile.jobRole)?.label[language]
+    : null;
+  const displayRole = profile?.jobTitle || jobLabel || user?.role || "Admin";
+  const avatarSrc = profile?.avatar ?? DEFAULT_AVATAR;
   const [open, setOpen] = useState(false);
   const [dropdownPos, setDropdownPos] = useState<{ top: number; right: number }>({ top: 0, right: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -91,11 +94,11 @@ export default function Topbar() {
           >
             <div className={styles.avatar}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/image/cordelio-harf.png" alt="Avatar" />
+              <img src={avatarSrc} alt="Avatar" />
             </div>
             <div className={styles.profileInfo}>
-              <span className={styles.profileName}>{user?.name ?? "Cordelio"}</span>
-              <span className={styles.profileRole}>{user?.role ?? "Admin"}</span>
+              <span className={styles.profileName}>{displayName}</span>
+              <span className={styles.profileRole}>{displayRole}</span>
             </div>
             <span className={`${styles.profileChevron} ${open ? styles.profileChevronOpen : ""}`}>
               <ChevronDown />
@@ -109,16 +112,35 @@ export default function Topbar() {
               style={{ top: dropdownPos.top, right: dropdownPos.right }}
             >
               {/* ─── Profil başlığı ─── */}
-              <div className={styles.dropdownProfile}>
+              <Link
+                href="/profile"
+                className={styles.dropdownProfile}
+                onClick={() => setOpen(false)}
+              >
                 <div className={styles.dropdownAvatar}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/image/cordelio-harf.png" alt="Avatar" />
+                  <img src={avatarSrc} alt="Avatar" />
                 </div>
                 <div>
-                  <p className={styles.dropdownName}>{user?.name ?? "Cordelio"}</p>
-                  <p className={styles.dropdownEmail}>{user?.email ?? "—"}</p>
+                  <p className={styles.dropdownName}>{displayName}</p>
+                  <p className={styles.dropdownEmail}>{profile?.email ?? user?.email ?? "—"}</p>
                 </div>
-              </div>
+              </Link>
+
+              <Link
+                href="/profile"
+                className={styles.dropdownRow}
+                onClick={() => setOpen(false)}
+              >
+                <span className={styles.dropdownRowIcon}>
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} className="w-4 h-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </span>
+                <span className={styles.dropdownRowLabel}>
+                  {language === "tr" ? "Profilim" : "My Profile"}
+                </span>
+              </Link>
 
               <div className={styles.dropdownDivider} />
 

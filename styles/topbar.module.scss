@@ -293,6 +293,18 @@ $topbar-blue: #4a9de0;    // sidebar #2d7dd2'den açık
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: var(--bg-tertiary, #f8fafc);
+  }
+}
+
+:global([data-theme='dark']) .dropdownProfile:hover,
+:global(.dark) .dropdownProfile:hover {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .dropdownAvatar {
