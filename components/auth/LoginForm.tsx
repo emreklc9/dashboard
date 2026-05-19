@@ -1,8 +1,10 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import LoginBackgroundVideo from "@/components/auth/LoginBackgroundVideo";
+import PasswordInput from "@/components/auth/PasswordInput";
 import styles from "@/styles/login.module.scss";
 
 export default function LoginForm() {
@@ -11,6 +13,7 @@ export default function LoginForm() {
   const [password, setPassword] = useState("test123");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const registered = searchParams.get("registered") === "1";
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -34,7 +37,12 @@ export default function LoginForm() {
 
       const from = searchParams.get("from");
       const target =
-        from && from.startsWith("/") && !from.startsWith("/login") ? from : "/dashboard";
+        from &&
+        from.startsWith("/") &&
+        !from.startsWith("/login") &&
+        !from.startsWith("/register")
+          ? from
+          : "/dashboard";
       window.location.replace(target);
       return;
     } catch {
@@ -59,6 +67,11 @@ export default function LoginForm() {
         </div>
 
         <form className={styles.form} onSubmit={handleSubmit}>
+          {registered && (
+            <div className={styles.success}>
+              Kayıt formu doğrulandı. Demo giriş: cordelio@dev.com / test123
+            </div>
+          )}
           {error && <div className={styles.error}>{error}</div>}
 
           <div>
@@ -80,12 +93,10 @@ export default function LoginForm() {
             <label className={styles.label} htmlFor="password">
               Şifre
             </label>
-            <input
+            <PasswordInput
               id="password"
-              type="password"
-              className={styles.input}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={setPassword}
               autoComplete="current-password"
               required
             />
@@ -96,7 +107,14 @@ export default function LoginForm() {
           </button>
         </form>
 
-        <p className={styles.hint}>Demo: cordelio@dev.com / test123 · Oturum 3 saat</p>
+        <p className={styles.hint}>Demo: cordelio@dev.com</p>
+
+        <p className={styles.footerText}>
+          Hesabınız yok mu?{" "}
+          <Link href="/register" className={styles.footerLink}>
+            Kayıt olun
+          </Link>
+        </p>
       </div>
     </div>
   );

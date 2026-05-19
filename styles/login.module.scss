@@ -123,6 +123,68 @@
   color: #f1f5f9;
 }
 
+.passwordWrap {
+  position: relative;
+}
+
+.inputPassword {
+  width: 100%;
+  padding: 11px 42px 11px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  background: var(--bg-tertiary, #f8fafc);
+  font-size: 14px;
+  color: #000;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:focus {
+    border-color: #005eb8;
+    box-shadow: 0 0 0 3px rgba(0, 94, 184, 0.12);
+  }
+}
+
+:global(.dark) .inputPassword,
+:global([data-theme='dark']) .inputPassword {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+
+  &:hover {
+    color: #005eb8;
+    background: rgba(0, 94, 184, 0.08);
+  }
+}
+
+:global(.dark) .passwordToggle,
+:global([data-theme='dark']) .passwordToggle {
+  color: #94a3b8;
+
+  &:hover {
+    color: #93c5fd;
+    background: rgba(147, 197, 253, 0.1);
+  }
+}
+
 .error {
   padding: 10px 12px;
   border-radius: 8px;
@@ -185,4 +247,38 @@
   margin-top: 12px;
   font-size: 11px;
   color: var(--text-muted, #fff);
+}
+
+.success {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  font-size: 13px;
+}
+
+:global(.dark) .success,
+:global([data-theme='dark']) .success {
+  background: #052e16;
+  border-color: #166534;
+  color: #86efac;
+}
+
+.footerText {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #fff;
+  text-align: center;
+}
+
+.footerLink {
+  font-weight: 700;
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover {
+    opacity: 0.9;
+  }
 }

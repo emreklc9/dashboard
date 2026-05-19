@@ -275,6 +275,58 @@
   resize: vertical;
 }
 
+.passwordWrap {
+  position: relative;
+}
+
+.inputPassword {
+  width: 100%;
+  padding: 10px 42px 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  background: var(--bg-tertiary, #f8fafc);
+  font-size: 14px;
+  color: var(--text-primary, #0f172a);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:focus {
+    border-color: #005eb8;
+    box-shadow: 0 0 0 3px rgba(0, 94, 184, 0.12);
+  }
+}
+
+:global(.dark) .inputPassword,
+:global([data-theme='dark']) .inputPassword {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+
+  &:hover {
+    color: #005eb8;
+    background: rgba(0, 94, 184, 0.08);
+  }
+}
+
 .skillsWrap {
   display: flex;
   flex-wrap: wrap;

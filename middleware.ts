@@ -3,10 +3,10 @@ import type { NextRequest } from "next/server";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/constants";
 import { getUserFromToken } from "@/lib/auth/session";
 
-const PUBLIC_PATHS = ["/login"];
+const AUTH_PAGES = ["/login", "/register"];
 
-function isPublicPath(pathname: string): boolean {
-  return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+function isAuthPage(pathname: string): boolean {
+  return AUTH_PAGES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }
 
 function isStaticAsset(pathname: string): boolean {
@@ -32,9 +32,9 @@ export async function middleware(request: NextRequest) {
 
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
   const user = await getUserFromToken(token);
-  const isLoginPage = isPublicPath(pathname);
+  const isGuestAuthPage = isAuthPage(pathname);
 
-  if (!user && !isLoginPage) {
+  if (!user && !isGuestAuthPage) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
     if (pathname !== "/") {
@@ -43,7 +43,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (user && isLoginPage) {
+  if (user && isGuestAuthPage) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

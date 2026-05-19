@@ -14,7 +14,7 @@ const SEED: UserProfile = {
   jobTitle: "Lead Developer",
   bio: "",
   phone: "",
-  location: "İstanbul, TR",
+  location: "Ankara, TR",
   website: "",
   skills: ["React", "Next.js", "TypeScript"],
   timezone: "Europe/Istanbul",

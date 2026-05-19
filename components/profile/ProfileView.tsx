@@ -5,6 +5,7 @@ import { useApp } from "@/context/AppContext";
 import { useProfile } from "@/context/ProfileContext";
 import { JOB_ROLE_OPTIONS, TIMEZONE_OPTIONS } from "@/lib/profile/constants";
 import type { JobRole, TaskPriority, TaskStatus } from "@/lib/profile/types";
+import PasswordInput from "@/components/auth/PasswordInput";
 import styles from "@/styles/profile.module.scss";
 
 const DEFAULT_AVATAR = "/image/cordelio-harf.png";
@@ -332,7 +333,7 @@ export default function ProfileView() {
                   className={styles.input}
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  placeholder={tr ? "İstanbul, TR" : "Istanbul, TR"}
+                  placeholder={tr ? "Ankara, TR" : "Ankara, TR"}
                 />
               </div>
               <div className={styles.field}>
@@ -416,12 +417,11 @@ export default function ProfileView() {
                 <label className={styles.label} htmlFor="currentPassword">
                   {tr ? "Mevcut şifre" : "Current password"}
                 </label>
-                <input
+                <PasswordInput
                   id="currentPassword"
-                  type="password"
-                  className={styles.input}
+                  variant="profile"
                   value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  onChange={setCurrentPassword}
                   autoComplete="current-password"
                 />
               </div>
@@ -429,12 +429,11 @@ export default function ProfileView() {
                 <label className={styles.label} htmlFor="newPassword">
                   {tr ? "Yeni şifre" : "New password"}
                 </label>
-                <input
+                <PasswordInput
                   id="newPassword"
-                  type="password"
-                  className={styles.input}
+                  variant="profile"
                   value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  onChange={setNewPassword}
                   autoComplete="new-password"
                 />
               </div>
@@ -442,12 +441,11 @@ export default function ProfileView() {
                 <label className={styles.label} htmlFor="confirmPassword">
                   {tr ? "Yeni şifre (tekrar)" : "Confirm password"}
                 </label>
-                <input
+                <PasswordInput
                   id="confirmPassword"
-                  type="password"
-                  className={styles.input}
+                  variant="profile"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={setConfirmPassword}
                   autoComplete="new-password"
                 />
               </div>

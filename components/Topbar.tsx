@@ -127,7 +127,7 @@ export default function Topbar() {
                 </div>
               </Link>
 
-              <Link
+              {/* <Link
                 href="/profile"
                 className={styles.dropdownRow}
                 onClick={() => setOpen(false)}
@@ -138,9 +138,9 @@ export default function Topbar() {
                   </svg>
                 </span>
                 <span className={styles.dropdownRowLabel}>
-                  {language === "tr" ? "Profilim" : "My Profile"}
+                  {language === "tr" ? "Profidddlim" : "My Profile"}
                 </span>
-              </Link>
+              </Link> */}
 
               <div className={styles.dropdownDivider} />
 
