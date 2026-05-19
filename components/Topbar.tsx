@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useApp, AccentColor, Language } from "@/context/AppContext";
 import { useAuth } from "@/context/AuthContext";
 import { useProfile } from "@/context/ProfileContext";
+import { useSidebar } from "@/context/SidebarContext";
 import { JOB_ROLE_OPTIONS } from "@/lib/profile/constants";
 import styles from "@/styles/topbar.module.scss";
 
@@ -41,6 +42,7 @@ export default function Topbar() {
   const { accent, setAccent, darkMode, toggleDarkMode, language, setLanguage } = useApp();
   const { user, logout } = useAuth();
   const { profile } = useProfile();
+  const { toggle: toggleSidebar } = useSidebar();
   const displayName = profile?.name ?? user?.name ?? "Cordelio";
   const jobLabel = profile?.jobRole
     ? JOB_ROLE_OPTIONS.find((o) => o.value === profile.jobRole)?.label[language]
@@ -80,9 +82,18 @@ export default function Topbar() {
 
   return (
     <header className={styles.topbar} data-accent={accent}>
-      <p className={styles.greeting}>
-        {/* {language === "tr" ? "Hoş geldiniz 👋" : "Welcome 👋"} */}
-      </p>
+      <div className={styles.topbarLeft}>
+        <button
+          type="button"
+          className={styles.menuBtn}
+          onClick={toggleSidebar}
+          aria-label={language === "tr" ? "Menüyü aç" : "Open menu"}
+        >
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
 
       <div className={styles.actions}>
         {/* Profil + Dropdown */}

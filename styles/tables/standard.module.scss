@@ -1,6 +1,7 @@
 .tableWrap {
   overflow-x: auto;
   overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
 }
 
 .table tbody tr {
@@ -9,6 +10,7 @@
 
 .table {
   width: 100%;
+  min-width: 640px;
   border-collapse: collapse;
   font-size: 13px;
 }

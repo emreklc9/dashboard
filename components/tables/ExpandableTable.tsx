@@ -22,37 +22,10 @@ function StatusBadge({ status, language }: { status: TableStatus; language: "tr"
   return <span className={`${shared.statusBadge} ${cls}`}>{labels[language][status]}</span>;
 }
 
-function ProgressRing({ current, total }: { current: number; total: number }) {
-  const pct = total > 0 ? (current / total) * 100 : 0;
-  const r = 20;
-  const c = 2 * Math.PI * r;
-  const offset = c - (pct / 100) * c;
-  return (
-    <div className={styles.progressRing}>
-      <svg width="48" height="48" viewBox="0 0 48 48">
-        <circle cx="24" cy="24" r={r} fill="none" stroke="var(--border-color, #e2e8f0)" strokeWidth="4" />
-        <circle
-          cx="24"
-          cy="24"
-          r={r}
-          fill="none"
-          stroke="#3b82f6"
-          strokeWidth="4"
-          strokeDasharray={c}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-        />
-      </svg>
-      <span className={styles.progressRingText}>
-        {current}/{total}
-      </span>
-    </div>
-  );
-}
-
 export default function ExpandableTable() {
   const { language } = useApp();
   const tr = language === "tr";
+  const quotaLabel = tr ? "Alan kotası" : "Subdomains";
   const [expanded, setExpanded] = useState<Set<string>>(new Set(["1"]));
 
   const toggle = (id: string) => {
@@ -66,6 +39,7 @@ export default function ExpandableTable() {
 
   const renderRow = (row: ExpandableRow) => {
     const isOpen = expanded.has(row.id);
+
     return (
       <div key={row.id} className={`${styles.rowCard} ${isOpen ? styles.expanded : ""}`}>
         <div
@@ -92,28 +66,39 @@ export default function ExpandableTable() {
           </div>
 
           {row.usage.map((u) => (
-            <div key={u.label} className={styles.usageCell}>
-              <div className={styles.usageLabel}>{u.label}</div>
-              <div className={styles.usageBar}>
-                {u.segments.map((seg, i) => (
-                  <div
-                    key={i}
-                    className={styles.usageBarSegment}
-                    style={{ width: `${seg.percent}%`, background: seg.color }}
-                  />
-                ))}
-              </div>
-              <div className={styles.usageText}>
-                {u.used} / {u.total}
-              </div>
+            <div key={u.label} className={styles.statCell}>
+              <span className={styles.statLabel}>{u.label}</span>
+              <span className={styles.statValue}>
+                {u.used} <span className={styles.statMuted}>/ {u.total}</span>
+              </span>
             </div>
           ))}
 
-          <ProgressRing current={row.progress.current} total={row.progress.total} />
-          <StatusBadge status={row.status} language={language} />
-          <div onClick={(e) => e.stopPropagation()}>
-            <TableActions language={language} />
+          <div className={styles.statCell}>
+            <span className={styles.statLabel}>{quotaLabel}</span>
+            <span className={styles.statValue}>
+              {row.progress.current} / {row.progress.total}
+            </span>
           </div>
+
+          <div className={styles.mobileStats}>
+            {row.usage.map((u) => (
+              <span key={u.label} className={styles.mobileStatChip}>
+                {u.label}: {u.used}
+              </span>
+            ))}
+            <span className={styles.mobileStatChip}>
+              {quotaLabel}: {row.progress.current}/{row.progress.total}
+            </span>
+          </div>
+
+          <div className={styles.rowFooter}>
+            <StatusBadge status={row.status} language={language} />
+            <div onClick={(e) => e.stopPropagation()}>
+              <TableActions language={language} />
+            </div>
+          </div>
+
           <button
             type="button"
             className={`${styles.chevron} ${isOpen ? styles.open : ""}`}
@@ -141,9 +126,10 @@ export default function ExpandableTable() {
                 <span className={styles.subTag} style={{ background: child.tag.bg, color: child.tag.color }}>
                   {child.tag.label}
                 </span>
-                <div />
                 <StatusBadge status={child.status} language={language} />
-                <TableActions language={language} />
+                <div onClick={(e) => e.stopPropagation()}>
+                  <TableActions language={language} />
+                </div>
               </div>
             ))}
           </div>
@@ -166,11 +152,10 @@ export default function ExpandableTable() {
 
       <div className={styles.detailHeader}>
         <span>{tr ? "Alan adı" : "Domain"}</span>
-        <span>{tr ? "Kullanım 1" : "Usage 1"}</span>
-        <span>{tr ? "Kullanım 2" : "Usage 2"}</span>
-        <span>{tr ? "Kota" : "Quota"}</span>
+        <span>{tr ? "Disk" : "Disk"}</span>
+        <span>{tr ? "Bant" : "Bandwidth"}</span>
+        <span>{quotaLabel}</span>
         <span>{tr ? "Durum" : "Status"}</span>
-        <span>{tr ? "İşlemler" : "Actions"}</span>
         <span />
       </div>
 

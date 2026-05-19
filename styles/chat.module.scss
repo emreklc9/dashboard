@@ -544,3 +544,72 @@
   color: var(--text-muted, #94a3b8);
   text-align: center;
 }
+
+// ─── Mobil geri / menü ───────────────────────────────────────────────────────
+.backBtn {
+  display: none;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  background: var(--bg-tertiary, #f1f5f9);
+  color: var(--text-primary, #0f172a);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+
+:global([data-theme='dark']) .backBtn,
+:global(.dark) .backBtn {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+@media (max-width: 767px) {
+  .chatWrap {
+    min-height: calc(100dvh - 58px - 24px);
+  }
+
+  .contactPanel {
+    width: 100%;
+    border-right: none;
+  }
+
+  .chatPanel {
+    display: none;
+  }
+
+  .chatWrapShowChat {
+    .contactPanel {
+      display: none;
+    }
+
+    .chatPanel {
+      display: flex;
+    }
+  }
+
+  .backBtn {
+    display: inline-flex;
+  }
+
+  .msgGroup {
+    max-width: 85%;
+  }
+
+  .messageRowSelf {
+    padding-left: 0;
+  }
+
+  .chatInputArea {
+    padding: 10px 12px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .contactPanel {
+    width: 240px;
+  }
+}

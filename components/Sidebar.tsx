@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { useApp } from "@/context/AppContext";
+import { useSidebar } from "@/context/SidebarContext";
 import styles from "@/styles/sidebar.module.scss";
 
 type NavLabel = { tr: string; en: string };
@@ -114,6 +115,7 @@ const ChevronRight = () => (
 export default function Sidebar() {
   const pathname = usePathname();
   const { accent, language } = useApp();
+  const { isOpen, close } = useSidebar();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
   const isActive = (href: string) =>
@@ -123,7 +125,10 @@ export default function Sidebar() {
     setOpenMenus((prev) => ({ ...prev, [href]: !prev[href] }));
 
   return (
-    <aside className={styles.sidebar} data-accent={accent}>
+    <aside
+      className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ""}`}
+      data-accent={accent}
+    >
       {/* Logo */}
       <div className={styles.logo}>
         <div className={styles.logoIcon} data-accent={accent}>
@@ -134,6 +139,16 @@ export default function Sidebar() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/image/cordelio.png" alt="Cordelio" className={styles.logoWordmark} data-accent={accent} />
         </div>
+        <button
+          type="button"
+          className={styles.closeBtn}
+          onClick={close}
+          aria-label={language === "tr" ? "Menüyü kapat" : "Close menu"}
+        >
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       {/* Ana Navigasyon */}
@@ -164,6 +179,7 @@ export default function Sidebar() {
                         key={child.href}
                         href={child.href}
                         className={`${styles.subItem} ${isActive(child.href) ? styles.subItemActive : ""}`}
+                        onClick={close}
                       >
                         <span className={styles.subItemDot} />
                         {child.label[language]}
@@ -178,6 +194,7 @@ export default function Sidebar() {
                 href={item.href}
                 className={`${styles.navItem} ${isActive(item.href) ? styles.active : ""}`}
                 data-accent={accent}
+                onClick={close}
               >
                 <span className={styles.iconWrap}>{item.icon}</span>
                 <span className={styles.label}>{item.label[language]}</span>
@@ -209,6 +226,7 @@ export default function Sidebar() {
             href={item.href}
             className={`${styles.navItem} ${isActive(item.href) ? styles.active : ""}`}
             data-accent={accent}
+            onClick={close}
           >
             <span className={styles.iconWrap}>{item.icon}</span>
             <span className={styles.label}>{item.label[language]}</span>

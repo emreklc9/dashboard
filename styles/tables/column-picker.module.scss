@@ -87,6 +87,7 @@
 .tableWrap {
   overflow-x: auto;
   overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar { height: 6px; }
   &::-webkit-scrollbar-thumb { background: var(--border-color, #e2e8f0); border-radius: 4px; }
@@ -98,6 +99,7 @@
 
 .table {
   width: 100%;
+  min-width: 720px;
   border-collapse: collapse;
   font-size: 13px;
 }

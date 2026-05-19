@@ -63,7 +63,13 @@ export default function ChatPage() {
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState<Message[]>(MESSAGES);
   const [search, setSearch] = useState("");
+  const [mobileShowChat, setMobileShowChat] = useState(false);
   const messageEndRef = useRef<HTMLDivElement>(null);
+
+  const selectContact = (id: number) => {
+    setActiveId(id);
+    setMobileShowChat(true);
+  };
 
   const activeContact = CONTACTS.find((c) => c.id === activeId)!;
   const activeMessages = messages.filter((m) => m.contactId === activeId);
@@ -110,7 +116,10 @@ export default function ChatPage() {
   const accentColor = ACCENT_COLORS[accent] ?? "#005eb8";
 
   return (
-    <div style={{ height: "calc(100vh - 58px - 48px)" }} className={styles.chatWrap}>
+    <div
+      className={`${styles.chatWrap} ${mobileShowChat ? styles.chatWrapShowChat : ""}`}
+      style={{ height: "100%" }}
+    >
       {/* ── Sol panel ── */}
       <div className={styles.contactPanel}>
         <div className={styles.contactPanelHeader}>
@@ -137,7 +146,7 @@ export default function ChatPage() {
             <div
               key={c.id}
               className={`${styles.contactItem} ${activeId === c.id ? styles.contactItemActive : ""}`}
-              onClick={() => setActiveId(c.id)}
+              onClick={() => selectContact(c.id)}
             >
               <div className={styles.avatarWrap}>
                 <div className={styles.avatar} style={{ background: c.color }}>
@@ -167,6 +176,16 @@ export default function ChatPage() {
         {/* Header */}
         <div className={styles.chatHeader}>
           <div className={styles.chatHeaderLeft}>
+            <button
+              type="button"
+              className={styles.backBtn}
+              onClick={() => setMobileShowChat(false)}
+              aria-label={language === "tr" ? "Geri" : "Back"}
+            >
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
             <div className={styles.avatar} style={{ background: activeContact.color, width: 36, height: 36, fontSize: 13 }}>
               {activeContact.initials}
             </div>

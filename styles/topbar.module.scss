@@ -34,23 +34,52 @@ $topbar-blue: #4a9de0;    // sidebar #2d7dd2'den açık
   /* backdrop-filter yeni stacking context oluşturduğu için dropdown altta kalır, kaldırıldı */
 }
 
-// ─── Karşılama yazısı ─────────────────────────────────────────────────────────
-.greeting {
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
+// ─── Sol: menü ────────────────────────────────────────────────────────────────
+.topbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
 
-:global([data-theme='dark']) .greeting,
-:global(.dark) .greeting {
-  color: var(--text-muted);
+.menuBtn {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.18);
+  color: white;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.28);
+  }
 }
 
-// ─── Sağ aksiyonlar ───────────────────────────────────────────────────────────
+:global([data-theme='dark']) .menuBtn,
+:global(.dark) .menuBtn {
+  background: var(--bg-tertiary, #1e293b);
+  color: var(--text-primary, #e2e8f0);
+  border: 1px solid var(--border-color, #334155);
+}
+
+@media (max-width: 1023px) {
+  .menuBtn {
+    display: inline-flex;
+  }
+}
+
+// ─── Sağ: profil ──────────────────────────────────────────────────────────────
 .actions {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-left: auto;
 }
 
 // ─── Renk seçici ─────────────────────────────────────────────────────────────

@@ -37,6 +37,11 @@
   border-radius: var(--radius-lg, 14px);
   overflow: visible;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+
+  @media (max-width: 767px) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 :global([data-theme='dark']) .card,

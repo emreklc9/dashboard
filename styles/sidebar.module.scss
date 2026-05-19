@@ -350,3 +350,46 @@ $active-blue: rgba(0, 0, 0, 0.15);
 :global(.dark) .divider {
   background: var(--border-color);
 }
+
+// ─── Mobil / tablet drawer ───────────────────────────────────────────────────
+.closeBtn {
+  display: none;
+  margin-left: auto;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+}
+
+@media (max-width: 1023px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 50;
+    min-height: 100vh;
+    min-height: 100dvh;
+    transform: translateX(-100%);
+    box-shadow: none;
+    transition: transform 0.28s ease;
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.28);
+  }
+
+  .closeBtn {
+    display: inline-flex;
+  }
+}

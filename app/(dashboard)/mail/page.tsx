@@ -164,6 +164,8 @@ export default function MailPage() {
   const [mentions, setMentions]     = useState<Mention[]>([]);
   const [attachedFiles, setAttachedFiles] = useState<{ name: string; size: string }[]>([]);
   const [mentionQuery, setMentionQuery]   = useState<string | null>(null); // null = kapalı, string = filtre
+  const [mobileShowDetail, setMobileShowDetail] = useState(false);
+  const [foldersOpen, setFoldersOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef  = useRef<HTMLTextAreaElement>(null);
 
@@ -232,10 +234,21 @@ export default function MailPage() {
   const activeMail = activeMailId ? MAILS.find((m) => m.id === activeMailId) ?? null : null;
 
   return (
-    <div style={{ height: "calc(100vh - 58px - 48px)" }} className={styles.mailWrap}>
+    <div
+      className={`${styles.mailWrap} ${mobileShowDetail ? styles.mailWrapShowDetail : ""}`}
+      style={{ height: "100%" }}
+    >
+      {foldersOpen && (
+        <button
+          type="button"
+          className={styles.folderOverlay}
+          onClick={() => setFoldersOpen(false)}
+          aria-label={language === "tr" ? "Kapat" : "Close"}
+        />
+      )}
 
       {/* ── Klasör paneli ── */}
-      <div className={styles.folderPanel}>
+      <div className={`${styles.folderPanel} ${foldersOpen ? styles.folderPanelOpen : ""}`}>
         <button
           className={styles.composeBtn}
           style={{ background: accentColor }}
@@ -251,7 +264,12 @@ export default function MailPage() {
             key={f.id}
             className={`${styles.folderItem} ${activeFolder === f.id ? styles.folderItemActive : ""}`}
             style={activeFolder === f.id ? { color: accentColor } : undefined}
-            onClick={() => { setActiveFolder(f.id); setActiveMailId(null); }}
+            onClick={() => {
+              setActiveFolder(f.id);
+              setActiveMailId(null);
+              setMobileShowDetail(false);
+              setFoldersOpen(false);
+            }}
           >
             <span className={styles.folderIcon} style={activeFolder === f.id ? { color: accentColor } : undefined}>
               {f.icon}
@@ -284,6 +302,16 @@ export default function MailPage() {
       {/* ── Mail listesi ── */}
       <div className={styles.mailListPanel}>
         <div className={styles.mailListHeader}>
+          <button
+            type="button"
+            className={styles.mobileBarBtn}
+            onClick={() => setFoldersOpen(true)}
+            aria-label={language === "tr" ? "Klasörler" : "Folders"}
+          >
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
           <span className={styles.mailListTitle}>
             {language === "tr"
               ? FOLDERS.find((f) => f.id === activeFolder)?.labelTR
@@ -301,7 +329,10 @@ export default function MailPage() {
               <div
                 key={mail.id}
                 className={`${styles.mailItem} ${activeMailId === mail.id ? styles.mailItemActive : ""}`}
-                onClick={() => setActiveMailId(mail.id)}
+                onClick={() => {
+                  setActiveMailId(mail.id);
+                  setMobileShowDetail(true);
+                }}
               >
                 {mail.unread && <span className={styles.mailUnreadDot} style={{ background: accentColor }} />}
                 {!mail.unread && <span style={{ width: 7, flexShrink: 0 }} />}
@@ -349,7 +380,19 @@ export default function MailPage() {
           <>
             {/* Header */}
             <div className={styles.detailHeader}>
-              <h2 className={styles.detailSubject}>{activeMail.subject}</h2>
+              <div className={styles.detailHeaderTop}>
+                <button
+                  type="button"
+                  className={styles.backBtn}
+                  onClick={() => setMobileShowDetail(false)}
+                  aria-label={language === "tr" ? "Geri" : "Back"}
+                >
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <h2 className={styles.detailSubject}>{activeMail.subject}</h2>
+              </div>
               <div className={styles.detailMeta}>
                 <div className={styles.detailSenderRow}>
                   <div className={styles.detailAvatar} style={{ background: activeMail.color }}>
